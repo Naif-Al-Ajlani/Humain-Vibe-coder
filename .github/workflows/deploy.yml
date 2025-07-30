@@ -23,16 +23,11 @@ jobs:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: |
-          ai-development-conductor/frontend/package-lock.json
-          ai-development-conductor/backend/package-lock.json
+          ai-development-conductor/frontend/package.json
+          ai-development-conductor/backend/package.json
 
-    - name: Install Frontend Dependencies
-      working-directory: ./ai-development-conductor/frontend
-      run: npm ci
-
-    - name: Install Backend Dependencies
-      working-directory: ./ai-development-conductor/backend
-      run: npm ci
+    - name: Install Dependencies
+      run: npm run install:all
 
     - name: Run Frontend Tests
       working-directory: ./ai-development-conductor/frontend
