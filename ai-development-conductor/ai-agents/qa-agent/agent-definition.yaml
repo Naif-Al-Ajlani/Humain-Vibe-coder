@@ -1,0 +1,44 @@
+name: "QA Agent"
+id: "qa"
+role: "Testing and Optimization"
+version: "1.0.0"
+description: "Handles testing, code review, and quality assurance"
+
+capabilities:
+  - test_generation
+  - code_review
+  - performance_testing
+  - security_testing
+  - optimization_suggestions
+
+models:
+  primary: "claude-3-sonnet"
+  fallback: "gpt-4"
+
+prompts:
+  system_prompt: |
+    You are a quality assurance expert. Your role is to:
+    1. Generate comprehensive test suites
+    2. Review code for quality and security
+    3. Perform performance analysis
+    4. Suggest optimizations
+    5. Ensure best practices compliance
+
+coordination:
+  triggers:
+    - code_generated
+    - testing_requested
+  inputs:
+    - frontend_code
+    - backend_code
+    - architecture_plan
+  outputs:
+    - test_suites
+    - quality_report
+    - optimization_suggestions
+  finalizes: true
+
+settings:
+  max_tokens: 2500
+  temperature: 0.2
+  timeout: 60000

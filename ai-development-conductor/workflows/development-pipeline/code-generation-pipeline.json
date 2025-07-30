@@ -1,0 +1,39 @@
+{
+  "id": "code_generation_pipeline",
+  "name": "Code Generation Pipeline",
+  "version": "1.0.0",
+  "description": "Coordinates frontend and backend agents to generate code",
+  "trigger": "architecture_completed",
+  "parallel_execution": true,
+  "steps": [
+    {
+      "id": "frontend_development",
+      "name": "Frontend Development",
+      "agent": "frontend",
+      "action": "generate_components",
+      "inputs": ["architecture_plan", "frontend_tasks"],
+      "outputs": ["react_components", "styles", "tests"],
+      "timeout": 60000
+    },
+    {
+      "id": "backend_development",
+      "name": "Backend Development",
+      "agent": "backend",
+      "action": "generate_api",
+      "inputs": ["architecture_plan", "backend_tasks"],
+      "outputs": ["api_code", "database_schema", "tests"],
+      "timeout": 60000
+    },
+    {
+      "id": "integration_check",
+      "name": "Integration Check",
+      "action": "check_integration",
+      "inputs": ["react_components", "api_code"],
+      "outputs": ["integration_report"],
+      "depends_on": ["frontend_development", "backend_development"],
+      "timeout": 20000
+    }
+  ],
+  "success_condition": "integration_successful",
+  "failure_handling": "coordinate_fix"
+}
