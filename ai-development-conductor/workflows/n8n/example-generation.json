@@ -1,0 +1,158 @@
+{
+  "name": "AI Example Application Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-example",
+        "responseMode": "responseNode"
+      },
+      "id": "example-trigger",
+      "name": "Generate Example Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const request = $input.first().json;\nconst exampleType = request.exampleType; // 'todo-app', 'chat-interface', 'dashboard'\n\n// Define example specifications\nconst exampleSpecs = {\n  'todo-app': {\n    description: 'Todo application with AI-powered task categorization',\n    features: ['CRUD operations', 'AI categorization', 'Real-time updates', 'Statistics'],\n    complexity: 'medium',\n    agents: ['architect', 'frontend', 'backend', 'qa']\n  },\n  'chat-interface': {\n    description: 'Real-time chat with AI assistance and suggestions',\n    features: ['Real-time messaging', 'AI suggestions', 'Smart responses', 'WebSocket'],\n    complexity: 'medium',\n    agents: ['architect', 'frontend', 'backend', 'qa']\n  },\n  'dashboard': {\n    description: 'Analytics dashboard with AI-generated insights',\n    features: ['Data visualization', 'AI insights', 'Interactive charts', 'Real-time data'],\n    complexity: 'complex',\n    agents: ['architect', 'frontend', 'backend', 'qa']\n  }\n};\n\nconst spec = exampleSpecs[exampleType];\nif (!spec) {\n  throw new Error(`Unknown example type: ${exampleType}`);\n}\n\nreturn {\n  exampleType,\n  projectId: `example_${exampleType}_${Date.now()}`,\n  specification: spec,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "prepare-example-spec",
+      "name": "Prepare Example Specification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:3001/api/n8n/trigger-workflow",
+        "options": {
+          "headers": {
+            "Content-Type": "application/json"
+          }
+        },
+        "body": {
+          "workflow": "project_initialization",
+          "data": {
+            "projectId": "={{$json.projectId}}",
+            "description": "={{$json.specification.description}}",
+            "requirements": "={{JSON.stringify($json.specification.features)}}"
+          }
+        }
+      },
+      "id": "trigger-agent-workflow",
+      "name": "Trigger Agent Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wait-for-agents",
+      "name": "Wait for Agent Processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:3001/api/examples/create",
+        "options": {
+          "headers": {
+            "Content-Type": "application/json"
+          }
+        },
+        "body": {
+          "projectId": "={{$('Prepare Example Specification').first().json.projectId}}",
+          "exampleType": "={{$('Prepare Example Specification').first().json.exampleType}}",
+          "specification": "={{$('Prepare Example Specification').first().json.specification}}",
+          "status": "generated"
+        }
+      },
+      "id": "create-example-record",
+      "name": "Create Example Record",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "statusCode": 200,
+        "body": {
+          "success": true,
+          "message": "Example application generated successfully",
+          "projectId": "={{$('Prepare Example Specification').first().json.projectId}}",
+          "exampleType": "={{$('Prepare Example Specification').first().json.exampleType}}"
+        }
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Generate Example Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Example Specification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Example Specification": {
+      "main": [
+        [
+          {
+            "node": "Trigger Agent Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Agent Workflow": {
+      "main": [
+        [
+          {
+            "node": "Wait for Agent Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Agent Processing": {
+      "main": [
+        [
+          {
+            "node": "Create Example Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Example Record": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1"
+}
