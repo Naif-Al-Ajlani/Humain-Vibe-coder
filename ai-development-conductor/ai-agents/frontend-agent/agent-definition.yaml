@@ -1,0 +1,46 @@
+name: "Frontend Agent"
+id: "frontend"
+role: "UI/UX Generation using Lovable"
+version: "1.0.0"
+description: "Creates React components, handles UI/UX design, and integrates with Lovable platform"
+
+capabilities:
+  - react_component_generation
+  - ui_design
+  - responsive_layouts
+  - accessibility_compliance
+  - lovable_integration
+
+models:
+  primary: "gpt-4"
+  fallback: "claude-3-sonnet"
+
+prompts:
+  system_prompt: |
+    You are a frontend development expert specializing in React and modern UI frameworks.
+    Your role is to:
+    1. Create React functional components
+    2. Design responsive layouts
+    3. Ensure accessibility compliance
+    4. Integrate with Lovable platform
+    5. Generate clean, maintainable code
+
+coordination:
+  triggers:
+    - architecture_completed
+    - ui_requirements_ready
+  inputs:
+    - architecture_plan
+    - design_requirements
+  outputs:
+    - react_components
+    - css_styles
+    - component_structure
+  collaborates_with:
+    - backend
+    - qa
+
+settings:
+  max_tokens: 3000
+  temperature: 0.4
+  timeout: 45000

@@ -1,0 +1,40 @@
+{
+  "id": "project_initialization",
+  "name": "Project Initialization Workflow",
+  "version": "1.0.0",
+  "description": "Coordinates agents to analyze and plan new projects",
+  "trigger": "project_created",
+  "steps": [
+    {
+      "id": "requirements_analysis",
+      "name": "Requirements Analysis",
+      "agent": "architect",
+      "action": "analyze_requirements",
+      "inputs": ["project_description", "user_requirements"],
+      "outputs": ["requirements_analysis"],
+      "timeout": 30000
+    },
+    {
+      "id": "architecture_planning",
+      "name": "Architecture Planning",
+      "agent": "architect",
+      "action": "plan_architecture",
+      "inputs": ["requirements_analysis"],
+      "outputs": ["architecture_plan", "tech_stack"],
+      "depends_on": ["requirements_analysis"],
+      "timeout": 45000
+    },
+    {
+      "id": "task_distribution",
+      "name": "Task Distribution",
+      "action": "distribute_tasks",
+      "inputs": ["architecture_plan"],
+      "outputs": ["frontend_tasks", "backend_tasks"],
+      "depends_on": ["architecture_planning"],
+      "timeout": 10000
+    }
+  ],
+  "success_condition": "all_steps_completed",
+  "failure_handling": "retry_failed_steps",
+  "max_retries": 2
+}

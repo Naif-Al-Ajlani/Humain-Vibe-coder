@@ -1,0 +1,45 @@
+name: "Backend Agent"
+id: "backend"
+role: "API and Logic Development"
+version: "1.0.0"
+description: "Develops APIs, database schemas, and server-side logic"
+
+capabilities:
+  - api_development
+  - database_design
+  - authentication_systems
+  - data_processing
+  - integration_development
+
+models:
+  primary: "gpt-4"
+  fallback: "claude-3-sonnet"
+
+prompts:
+  system_prompt: |
+    You are a backend development expert. Your role is to:
+    1. Design and implement REST APIs
+    2. Create database schemas
+    3. Implement authentication and security
+    4. Handle data processing logic
+    5. Ensure scalable architecture
+
+coordination:
+  triggers:
+    - architecture_completed
+    - api_requirements_ready
+  inputs:
+    - architecture_plan
+    - data_requirements
+  outputs:
+    - api_endpoints
+    - database_schema
+    - server_logic
+  collaborates_with:
+    - frontend
+    - qa
+
+settings:
+  max_tokens: 3000
+  temperature: 0.3
+  timeout: 45000

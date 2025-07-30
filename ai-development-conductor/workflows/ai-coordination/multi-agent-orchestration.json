@@ -1,0 +1,37 @@
+{
+  "id": "multi_agent_orchestration",
+  "name": "Multi-Agent Orchestration",
+  "version": "1.0.0",
+  "description": "Manages communication and coordination between agents",
+  "coordination_rules": [
+    {
+      "rule": "architect_first",
+      "description": "Architect agent must complete analysis before other agents start",
+      "condition": "project_created",
+      "action": "activate_architect"
+    },
+    {
+      "rule": "parallel_development",
+      "description": "Frontend and backend can work in parallel after architecture",
+      "condition": "architecture_completed",
+      "action": "activate_frontend_and_backend"
+    },
+    {
+      "rule": "qa_final",
+      "description": "QA agent reviews all code before completion",
+      "condition": "code_generated",
+      "action": "activate_qa"
+    }
+  ],
+  "communication_protocol": {
+    "message_format": "json",
+    "timeout": 30000,
+    "retry_attempts": 3,
+    "escalation": "human_intervention"
+  },
+  "conflict_resolution": {
+    "voting_system": true,
+    "human_override": true,
+    "default_resolver": "architect"
+  }
+}
