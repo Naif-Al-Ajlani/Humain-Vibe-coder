@@ -1,0 +1,40 @@
+.status-indicator {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.status-badge.healthy { background-color: #28a745; color: white; }
+.status-badge.warning { background-color: #ffc107; color: black; }
+.status-badge.error { background-color: #dc3545; color: white; }
+
+.status-details {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.status-indicator:hover .status-details {
+  display: block;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+}
