@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-conductor-n8n
+  namespace: ai-conductor
+  labels:
+    app: ai-conductor-n8n
+    tier: workflow
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-conductor-n8n
+  template:
+    metadata:
+      labels:
+        app: ai-conductor-n8n
+        tier: workflow
+    spec:
+      containers:
+      - name: n8n
+        image: n8nio/n8n:latest
+        ports:
+        - containerPort: 5678
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: N8N_HOST
+          value: "0.0.0.0"
+        - name: N8N_PORT
+          value: "5678"
+        - name: N8N_PROTOCOL
+          value: "https"
+        - name: DB_TYPE
+          value: "postgresdb"
+        - name: DB_POSTGRESDB_HOST
+          value: "postgres-service"
+        envFrom:
+        - secretRef:
+            name: ai-conductor-secrets
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: n8n-data
+          mountPath: /home/node/.n8n
+        - name: workflows
+          mountPath: /home/node/.n8n/workflows
+      volumes:
+      - name: n8n-data
+        persistentVolumeClaim:
+          claimName: n8n-data-pvc
+      - name: workflows
+        configMap:
+          name: n8n-workflows
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-conductor-n8n-service
+  namespace: ai-conductor
+spec:
+  selector:
+    app: ai-conductor-n8n
+  ports:
+    - protocol: TCP
+      port: 5678
+      targetPort: 5678
+  type: ClusterIP
