@@ -1,0 +1,42 @@
+.home-page {
+  padding: 2rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2rem;
+}
+
+.grid-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.input-section {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+.workflow-section {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.preview-section {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.timeline-section {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+}
