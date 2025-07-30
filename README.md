@@ -210,11 +210,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: support@ai-conductor.com
-- 💬 Discord: [AI Conductor Community](https://discord.gg/ai-conductor)
-- 📖 Documentation: [docs.ai-conductor.com](https://docs.ai-conductor.com)
+- 📧 Email: Naifalajlani@gmail.com
+- 💬 Discord: [Will be pubished soon)
+- 📖 Documentation: [Will be published soon)
 - 🐛 Issues: [GitHub Issues](https://github.com/Naif-Al-Ajlani/Humain-Vibe-coder/issues)
 
 ---
 
-**Built with ❤️ by the AI Development Conductor team**
+**Built with ❤️ by Naif Alajlani**
