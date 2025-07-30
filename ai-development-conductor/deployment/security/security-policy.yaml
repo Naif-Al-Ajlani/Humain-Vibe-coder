@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ai-conductor-network-policy
+  namespace: ai-conductor
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ai-conductor
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 3001
+    - protocol: TCP
+      port: 5678
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443  # HTTPS
+    - protocol: TCP
+      port: 53   # DNS
+    - protocol: UDP
+      port: 53   # DNS
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ai-conductor-secrets
+  namespace: ai-conductor
+type: Opaque
+data:
+  OPENAI_API_KEY: <base64-encoded-key>
+  ANTHROPIC_API_KEY: <base64-encoded-key>
+  POSTGRES_PASSWORD: <base64-encoded-password>
+  REDIS_PASSWORD: <base64-encoded-password>
+  N8N_PASSWORD: <base64-encoded-password>
+  JWT_SECRET: <base64-encoded-secret>

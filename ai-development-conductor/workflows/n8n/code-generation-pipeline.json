@@ -1,0 +1,82 @@
+{
+  "name": "Code Generation Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "code-generation-pipeline",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { architecturePlan: $json.body.architecturePlan } }]"
+      },
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://ai-conductor-backend:3001/api/agents/coordinate",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "agents",
+              "value": "={{['frontend', 'backend']}}"
+            },
+            {
+              "name": "task",
+              "value": "={{ { action: 'generate_code', architecturePlan: $json.architecturePlan } }}"
+            }
+          ]
+        }
+      },
+      "name": "Start Frontend & Backend Agents",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Start Frontend & Backend Agents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "3"
+}

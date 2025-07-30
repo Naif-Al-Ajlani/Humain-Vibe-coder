@@ -1,0 +1,71 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "AI Development Conductor Dashboard",
+    "tags": ["ai-conductor"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Overview",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up{job=\"ai-conductor-backend\"}",
+            "legendFormat": "Backend Status"
+          },
+          {
+            "expr": "up{job=\"ai-conductor-frontend\"}",
+            "legendFormat": "Frontend Status"
+          },
+          {
+            "expr": "up{job=\"n8n\"}",
+            "legendFormat": "n8n Status"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "AI Agent Activity",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "ai_agent_activations_total",
+            "legendFormat": "{{agent}} Activations"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Project Generation Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(projects_created_total[5m])",
+            "legendFormat": "Projects/min"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "n8n Workflow Executions",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "n8n_workflow_executions_total",
+            "legendFormat": "{{workflow}} Executions"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "5s"
+  }
+}

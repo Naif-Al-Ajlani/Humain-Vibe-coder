@@ -1,0 +1,82 @@
+{
+  "name": "Project Initialization",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "project-initialization",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { projectId: $json.body.projectId, description: $json.body.description } }]"
+      },
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://ai-conductor-backend:3001/api/agents/workflow/start",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "projectId",
+              "value": "={{$json.projectId}}"
+            },
+            {
+              "name": "projectDescription",
+              "value": "={{$json.description}}"
+            }
+          ]
+        }
+      },
+      "name": "Start Architect Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Start Architect Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "2"
+}

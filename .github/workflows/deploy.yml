@@ -1,0 +1,120 @@
+name: AI Development Conductor CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          ai-development-conductor/frontend/package.json
+          ai-development-conductor/backend/package.json
+
+    - name: Install Dependencies
+      run: npm run install:all
+
+    - name: Run Frontend Tests
+      working-directory: ./ai-development-conductor/frontend
+      run: npm test -- --coverage --watchAll=false
+
+    - name: Run Backend Tests
+      working-directory: ./ai-development-conductor/backend
+      run: npm test
+
+    - name: Upload Coverage Reports
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./ai-development-conductor/frontend/coverage/lcov.info,./ai-development-conductor/backend/coverage/lcov.info
+
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run Security Audit
+      working-directory: ./ai-development-conductor
+      run: |
+        cd frontend && npm audit --audit-level=high
+        cd ../backend && npm audit --audit-level=high
+
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: javascript
+
+  build:
+    needs: [test, security-scan]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and Push Frontend Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./ai-development-conductor/frontend
+        file: ./ai-development-conductor/frontend/Dockerfile.prod
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}
+
+    - name: Build and Push Backend Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./ai-development-conductor/backend
+        file: ./ai-development-conductor/backend/Dockerfile.prod
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ github.sha }}
+
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy to Staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment commands here
+        kubectl apply -f ai-development-conductor/deployment/kubernetes/ -n ai-conductor-staging
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy to Production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
+        kubectl apply -f ai-development-conductor/deployment/kubernetes/ -n ai-conductor
