@@ -16,7 +16,11 @@
     "format:check": "prettier --check .",
     "test": "npm run test --workspaces",
     "build": "npm run build --workspaces",
-    "dev": "concurrently \"npm run dev --workspace=ai-development-conductor/frontend\" \"npm run dev --workspace=ai-development-conductor/backend\"",
+    "dev": "concurrently \"npm run dev --workspace=ai-development-conductor/frontend\" \"npm run dev --workspace=ai-development-conductor/backend\" --names \"frontend,backend\" --prefix-colors \"cyan,magenta\"",
+    "start:dev": "./scripts/dev-start.sh",
+    "build:all": "npm run build --workspaces",
+    "test:all": "npm run test --workspaces",
+    "clean": "npm run clean --workspaces && rm -rf node_modules",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
