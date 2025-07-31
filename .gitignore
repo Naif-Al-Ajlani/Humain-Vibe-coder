@@ -1,6 +1,36 @@
 # Dependencies
 node_modules/
-*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
 
 # Environment variables
 .env
@@ -10,35 +40,92 @@ node_modules/
 .env.production.local
 
 # Build outputs
-build/
 dist/
-*/build/
-*/dist/
+build/
+out/
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# IDE
+# IDE and editor files
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# OS
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# AI Development Conductor specific
-ai-development-conductor/demos/*.mp4
-ai-development-conductor/demos/*.webm
-ai-development-conductor/examples/*/node_modules/
+# Logs
+logs
+*.log
+
+# AI-specific ignores
+*.openai-key
+*.claude-key
+ai-cache/
+model-cache/
+training-data/
+*.model
+*.weights
+
+# Platform-specific
+.replit
+.breakpoints
+.lovable-cache/
+n8n-data/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+database.db
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Parcel
+.cache/
+.parcel-cache/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional stylelint cache
+.stylelintcache
+
+# SvelteKit build / generate output
+.svelte-kit
+
+# End of https://www.gitignore.io/api/node

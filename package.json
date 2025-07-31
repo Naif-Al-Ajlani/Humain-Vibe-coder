@@ -1,24 +1,37 @@
 {
-  "name": "ai-development-conductor",
+  "name": "humain-vibe-coder",
   "version": "1.0.0",
-  "description": "AI-native development platform with multi-agent coordination",
+  "description": "AI-native development platform",
   "main": "index.js",
+  "workspaces": [
+    "ai-development-conductor/frontend",
+    "ai-development-conductor/backend"
+  ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd ai-development-conductor/frontend && npm start",
-    "dev:backend": "cd ai-development-conductor/backend && npm run dev",
-    "build": "npm run build:frontend && npm run build:backend",
-    "build:frontend": "cd ai-development-conductor/frontend && npm run build",
-    "build:backend": "cd ai-development-conductor/backend && npm run build",
-    "test": "npm run test:frontend && npm run test:backend",
-    "test:frontend": "cd ai-development-conductor/frontend && npm test",
-    "test:backend": "cd ai-development-conductor/backend && npm test",
-    "install:all": "npm install && cd ai-development-conductor/frontend && npm install && cd ../backend && npm install"
+    "setup": "npm install && npm run husky:install",
+    "husky:install": "husky install",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run test --workspaces",
+    "build": "npm run build --workspaces",
+    "dev": "concurrently \"npm run dev --workspace=ai-development-conductor/frontend\" \"npm run dev --workspace=ai-development-conductor/backend\"",
+    "type-check": "tsc --noEmit"
   },
-  "keywords": ["ai", "development", "automation", "multi-agent", "conductor"],
-  "author": "Naif Al-Ajlani",
-  "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "prettier": "^3.2.5",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "@types/node": "^20.11.25",
+    "typescript": "^5.4.2",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
